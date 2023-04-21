@@ -1,15 +1,16 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import './TodoList.css';
 
 const TodoList = () => {
+    const [todos, setTodos] = useState(JSON.parse(localStorage.getItem('list')))
     const [valueInput, setValueInput] = useState('')
-    //const [progress, setProgress] = useState('')
     const [progressInput, setProgressInput] = useState(0)
 
-    const [todos, setTodos] = useState([
-        { id: 1, value: 'Lau nha', progress: '50' },
-        { id: 2, value: 'Di choi', progress: '75' },
-    ])
+
+    useEffect(() => {
+        localStorage.setItem('list', JSON.stringify(todos))
+    }, [todos])
+
 
     const handleOnchangeValue = (e) => {
         setValueInput(e.target.value)
@@ -20,15 +21,17 @@ const TodoList = () => {
     }
 
     const handleAddTodo = () => {
+        if (!valueInput) {
+            return
+        }
         setValueInput('')
         const newTodo = {
-            id: todos.length + 1,
+            id: todos && todos.length + 1,
             value: valueInput,
             progress: progressInput,
         }
         setTodos([...todos, newTodo])
     }
-
 
     return (
         <div className="container">
